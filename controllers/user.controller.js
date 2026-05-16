@@ -6,6 +6,7 @@ const { success, error } = require("../utils/apiResponse");
 
 const getUsers = async (req, res) => {
   try {
+    
     const users= await userService.getUsers();
     return res.json(success(users));
   } catch (err) {
@@ -26,6 +27,7 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
    try {
+   
     const user = await userService.createUser(req.body);
     res.status(201).json(success(user));
   } catch (err) {

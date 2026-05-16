@@ -8,6 +8,16 @@ const userSchema = new mongoose.Schema(
       minLength: 3,
       maxLength: 50,
     },
+    password: {
+      type: String,
+      required: true,
+      minLength: 4,
+    },
+    role :{
+      type: String,
+      enum:["user","admin"],
+      default:"user"
+    }
   },
   { timestamps: true },
 );

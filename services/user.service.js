@@ -1,5 +1,7 @@
 // services/user.service.js
 const userRepo = require("../repositories/user.repositry");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const getUsers = async () => {
   return await userRepo.findAll();
@@ -10,8 +12,16 @@ const getUserById = async (id) => {
 };
 
 const createUser = async (data) => {
+  const existingUser = await userRepo.findByName(data.name);
+  if (existingUser) {
+    throw new Error("User already exists");
+  }
+
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+
   return await userRepo.create({
     name: data.name,
+    password: hashedPassword,
   });
 };
 
