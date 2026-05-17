@@ -1,5 +1,5 @@
 // services/user.service.js
-const userRepo = require("../repositories/user.repositry");
+const userRepo = require("../repositories/user.repository");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
