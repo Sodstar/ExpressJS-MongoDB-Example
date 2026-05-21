@@ -3,7 +3,7 @@ const { success } = require("../utils/apiResponse");
 
 const create = async (req, res, next) => {
   try {
-    const data = await service.createProduict(req.body);
+    const data = await service.createProduct(req.body, req.file);
     res.status(201).json(success(data));
   } catch (err) {
     next(err);
@@ -12,7 +12,7 @@ const create = async (req, res, next) => {
 
 const getAll = async (req, res, next) => {
   try {
-    const data = await service.getProduct();
+    const data = await service.getProduct(req.query);
     res.status(200).json(success(data));
   } catch (err) {
     next(err);
