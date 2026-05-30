@@ -1,5 +1,5 @@
 const repo = require("../repositories/product.repository");
-
+const { redis } = require("../utils/redis");
 const createProduct = async (data, file) => {
   return await repo.create({
     name: data.name,
@@ -10,13 +10,22 @@ const createProduct = async (data, file) => {
 };
 
 const getProduct = async (query) => {
+  const cacheKey = `products:${JSON.stringify(query)}`;
+  const cached = await redis.get(cacheKey);
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
   const { page = 1, limit = 10, minPrice, maxPrice, category } = query;
   const filter = {};
   if (minPrice) filter.price = { $gte: Number(minPrice) };
   if (maxPrice) filter.price = { ...filter.price, $lte: Number(maxPrice) };
   if (category) filter.category_id = category;
 
-  return await repo.findWithPagination(filter, page, limit);
+  const products = await repo.findWithPagination(filter, page, limit);
+
+  await redis.set(cacheKey, JSON.stringify(products), "EX", 3600); // Cache for 1 hour
+  return products;
 };
 
 const getProductById = async (id) => {
